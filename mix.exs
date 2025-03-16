@@ -24,6 +24,7 @@ defmodule Memorable.MixProject do
     [
       {:plug, "~> 1.17.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:amnesia, "~> 0.2.8"},
     ]
   end
 end
