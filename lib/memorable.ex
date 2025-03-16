@@ -1,15 +1,15 @@
-defmodule Memorable.HelloWorldPlug do
-  import Plug.Conn
+defmodule MyRouter do
+  use Plug.Router
 
-  def init(options) do
-    # initialize options
-    options
+  plug :match
+  plug :dispatch
+
+  get "/" do
+    send_resp(conn, 200, "Hello world")
   end
 
-  def call(conn, _opts) do
-    conn
-    |> put_resp_content_type("text/plain")
-    |> send_resp(200, "Hello world")
+  match _ do
+    send_resp(conn, 404, "oops")
   end
 end
 
@@ -23,7 +23,7 @@ defmodule Memorable do
   def start(_type, _args) do
     Supervisor.start_link(
       [
-        {Plug.Cowboy, plug: Memorable.HelloWorldPlug, scheme: :http, options: [port: 4000]},
+        {Plug.Cowboy, plug: MyRouter, scheme: :http, options: [port: 4000]},
       ],
       strategy: :one_for_one
     )
