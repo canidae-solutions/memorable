@@ -3,6 +3,7 @@
 ```sh
 $ mix deps.get
 $ mix run --no-halt
+$ mix amnesia.create -d Database --disk
 ```
 
 ## Installation
