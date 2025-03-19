@@ -1,21 +1,12 @@
-use Amnesia
-
-defdatabase Database do
-  deftable Collection, [:id, :name], type: :set do
-    @type t :: %Collection{id: id, name: String.t}
-    @type id :: integer
-  end
-  deftable Image, [:id, :collection_id, :path], type: :set do
-    @type t :: %Image{id: id, collection_id: Collection.id, path: String.t}
-    @type id :: integer
-  end
+defmodule Memorable.Collection do
+  use Memento.Table, attributes: [:id, :name]
 end
 
-defmodule MyRouter do
+defmodule Memorable.Router do
   use Plug.Router
 
-  plug :match
-  plug :dispatch
+  plug(:match)
+  plug(:dispatch)
 
   get "/" do
     send_resp(conn, 200, "Hello world")
@@ -32,23 +23,33 @@ defmodule Memorable do
   """
   use Application
   require Logger
-  alias Database.Collection
 
   def start(_type, _args) do
+    # TODO: only needs to be run once per db - move to init task
+    # nodes = [node()]
+    # Memento.stop()
+    # Memento.Schema.create(nodes)
+    # Memento.start()
+
+    # Memento.Table.create!(Memorable.Collection, disc_copies: nodes)
+
     Supervisor.start_link(
       [
-        {Plug.Cowboy, plug: MyRouter, scheme: :http, options: [port: 4000]},
-        {Task, &amnesia_test/0},
+        {Plug.Cowboy, plug: Memorable.Router, scheme: :http, options: [port: 4000]},
+        {Task, &memento_test/0}
       ],
       strategy: :one_for_one
     )
     |> tap(fn _ -> Logger.info("memorable listening on port 4000") end)
   end
 
-  def amnesia_test() do
-    Amnesia.transaction do
-      c20250201 = %Collection{id: 1, name: "Methven Park + Merri Creek Walk"} |> Collection.write
-      IO.inspect(Collection.read(1))
-    end
+  def memento_test() do
+    Memento.transaction!(fn ->
+      _c20250201 =
+        %Memorable.Collection{id: 1, name: "Methven Park + Merri Creek Walk"}
+        |> Memento.Query.write()
+
+      IO.inspect(Memento.Query.all(Memorable.Collection))
+    end)
   end
 end
