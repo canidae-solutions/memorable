@@ -25,14 +25,6 @@ defmodule Memorable do
   require Logger
 
   def start(_type, _args) do
-    # TODO: only needs to be run once per db - move to init task
-    # nodes = [node()]
-    # Memento.stop()
-    # Memento.Schema.create(nodes)
-    # Memento.start()
-
-    # Memento.Table.create!(Memorable.Collection, disc_copies: nodes)
-
     Supervisor.start_link(
       [
         {Plug.Cowboy, plug: Memorable.Router, scheme: :http, options: [port: 4000]},
