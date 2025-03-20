@@ -33,12 +33,9 @@ defmodule Memorable do
   end
 
   def memento_test() do
-    Memento.transaction!(fn ->
-      _c20250201 =
-        %Data.Collection{id: 1, name: "Methven Park + Merri Creek Walk"}
-        |> Memento.Query.write()
-
-      IO.inspect(Memento.Query.all(Data.Collection))
-    end)
+    Data.Collection.new("Test Collection")
+    |> Data.Collection.rename("Renamed Collection")
+    |> Data.Collection.write()
+    |> IO.inspect()
   end
 end

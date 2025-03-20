@@ -24,7 +24,8 @@ defmodule Memorable.MixProject do
     [
       {:memento, "~> 0.5.0"},
       {:plug, "~> 1.17.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:uniq, "~> 0.6.1"}
     ]
   end
 end
