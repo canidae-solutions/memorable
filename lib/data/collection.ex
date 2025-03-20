@@ -14,9 +14,8 @@ defmodule Memorable.Data.Collection do
 
   @derive {Inspect, only: [:id, :name, :creation_date]}
   use Memento.Table, attributes: [:id, :name, :creation_date]
-  alias Uniq.UUID
 
-  @type t :: %__MODULE__{id: String.t(), name: String.t(), creation_date: DateTime.t()}
+  @type t :: %__MODULE__{id: Memorable.Util.id(), name: String.t(), creation_date: DateTime.t()}
 
   @doc """
   Creates a new collection.
@@ -27,12 +26,8 @@ defmodule Memorable.Data.Collection do
   @doc since: "1.0.0"
   @spec new(String.t()) :: t()
   def new(name) do
-    id =
-      UUID.uuid7(:raw)
-      |> Base.encode32(padding: false, case: :lower)
-
     %__MODULE__{
-      id: id,
+      id: Memorable.Util.generate_id(),
       name: name,
       creation_date: DateTime.now!("Etc/UTC")
     }
