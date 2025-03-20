@@ -1,5 +1,6 @@
 {
   pkgs ? import <nixpkgs> { },
+  preCommitHook ? "",
 }:
 
 pkgs.mkShell {
@@ -8,5 +9,12 @@ pkgs.mkShell {
   packages = with pkgs; [
     elixir
     elixir-ls
+
+    nixfmt-rfc-style
+    nil
   ];
+
+  shellHook = ''
+    ${preCommitHook}
+  '';
 }

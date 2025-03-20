@@ -1,3 +1,4 @@
+# Nix devshells cached by direnv
 /.direnv/
 
 # The directory Mix will write compiled artifacts to.
@@ -26,3 +27,6 @@ memorable-*.tar
 
 # Memorable development databases
 /db/
+
+# git-hooks.nix generated configuration
+/.pre-commit-config.yaml
