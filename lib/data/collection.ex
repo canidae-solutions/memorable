@@ -6,7 +6,7 @@ defmodule Memorable.Data.Collection do
   organizing images.
 
   Collections are comprised of the following fields:
-  - `id`: A base32-encoded UUIDv7 representing the collection
+  - `id`: An [ID](`t:Memorable.Util.id/0`) representing the collection
   - `name`: The human-readable name of the collection
   - `creation_date`: A `DateTime` representing the time at which the collection was created.
   """
