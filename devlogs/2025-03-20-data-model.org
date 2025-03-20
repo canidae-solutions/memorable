@@ -1,0 +1,64 @@
+#+TITLE: 2025-03-20: Defining memorable's data model
+#+AUTHOR: Ruby Iris Juric <ruby@srxl.me>
+
+* Baseline level - what does memories currently support?
+In a given =meta.txt=, memories stores each image in one line, with space-separated fields for (in order):
+
+- Timestamp (when was the photo taken)
+- File path to image
+  - Full path obtained by applying field to =config.ts='s =BIG=
+  - Thumbnail obtained through =SMALL= in same file
+- Width (px)
+- Height (px)
+- Tags
+  - Variable length, each field = one tag
+
+Out of all of these, which ones do we need to store? Probably all of them, except for width and height - these are trivially computable, and I'm not convinced we get anything out of storing these values.
+
+* What can we improve?
+memories has no notion of "galleries" or "photo albums" - all photos are in the same collection. It's reasonable that users may want to separate their photos. As an example, I often organize my photos in distinct "shoots" (ie. I go out for a walk and take a bunch of photos - all those photos belong to the same shoot). I'd prefer to keep all of those collections organized somehow, or at the very least, have some mechanism to see a list of collections. Tags exist, but I'm not sure they're the correct mechanism here. I'm looking more for "where do these images live" as opposed to "what is this image about".
+
+With collections in the mix, the scope of tags become a little hazy. Do tags belong to the entire memorable database, or do they belong to collections? I can personally see arguments for both:
+
+- Global tags :: When I'm birding, I would tag each photo of a bird with the bird's species (eg. =rainbow lorikeet=). I'd want to be able to query memorable for all photos tagged =rainbow lorikeet= to get every photo of that bird I've taken before.
+- Local tags :: This would be most useful for cases where there's semantic overload between collections on a tag. I might have a collection containing art I've commissioned of my fursona, and collections of photos I took on walks - the tag =fox= would mean pretty distinct things in those two.
+
+Does this need to be a distinguished at the data model level though? When querying for images with tags, it's possible to scope a query to a given collection, while still defining tags at the top levels. Without storing tags in a collection though, determining "what tags are in a collection" becomes a query over the entire collection, which is a bit inefficient, especially for large collections. A potential middle ground - store all tags in a dedicated table, +and include a field on a collection that lists all tags present in the collection+. That way, we can establish relations between images with the same tag in different galleries for global lookups, +and quickly determine the subset of tags available to query for local lookups+. Actually, I don't think that field is necessary. There's not much use in knowing what tags exist in a collection - that can be determined from all images in the collection, and it's perfectly fine to answer a query for "what images have =xyz= tag in this collection" with "none" when there are no images tagged with =xyz=.
+
+memories has the concept of a "cluster", which is defined as "consecutive photos that were taken less than one hour apart". I think this might be a useful concept, but not as it's currently defined. When I'm going birding, it's very unlikely that there would be anything close to a hour-long gap between any photos on that collection - the cluster would span the entire collection, which is pretty useless. There's a few other ways clusters could be defined though:
+
+- User defined :: No attempts to automatically create clusters are made - instead, clusters act as a "subcollection" of sorts that the user manually organizes collections into.
+- Tag-based :: Maybe clusters can be based on tags? There's a few problems with that though:
+  - Should all tags get clustered at all times? Probably not.
+  - What if the same image has two tags - which cluster does it go in? Both? Only one? Which one?
+
+I think for now, we can leave out clusters, and start working without them. They're not a super-critical feature to have (especially with the concept of collections), and they can be implemented later.
+
+* Proposed initial data model
+** Collection
+| Column        | Description                                  |
+|---------------+----------------------------------------------|
+| id            | Primary key (UUID)                           |
+| name          | Human-readable collection name               |
+| creation_date | Timestamp of when the collection was created |
+
+** Image
+| Column        | Description                                                  |
+|---------------+--------------------------------------------------------------|
+| id            | Primary key (UUID)                                           |
+| collection_id | ID of the collection the image belongs to                    |
+| path          | Path to the image file on disk (relative to image directory) |
+| timestamp     | Timestamp of when the image was taken                        |
+| upload_date   | Timestamp of when the image was added to the memorable DB    |
+
+** Tag
+| Column | Description        |
+|--------+--------------------|
+| id     | Primary key (UUID) |
+| name   | Name of the tag    |
+
+** ImageTag
+| Column | Description                        |
+|--------+------------------------------------|
+| image  | ID of the image the tag is on      |
+| tag    | ID of the tag applied to the image |
