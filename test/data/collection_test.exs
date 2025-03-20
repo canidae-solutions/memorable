@@ -48,4 +48,18 @@ defmodule Memorable.Data.CollectionTest do
       assert {:ok, nil} = Collection.query_id("fake id")
     end
   end
+
+  describe "Collection.all/0" do
+    test "retrieves all collections from the database" do
+      {:ok, collection_a} = Collection.new("Diffies") |> Collection.write()
+      {:ok, collection_b} = Collection.new("Birds") |> Collection.write()
+      collection_c = Collection.new("Puppies")
+
+      {:ok, all_collections} = Collection.all()
+
+      assert collection_a in all_collections
+      assert collection_b in all_collections
+      refute collection_c in all_collections
+    end
+  end
 end

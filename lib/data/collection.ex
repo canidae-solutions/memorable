@@ -59,6 +59,21 @@ defmodule Memorable.Data.Collection do
   end
 
   @doc """
+  Fetches all collections from the memorable database.
+
+  Returns:
+  - `{:ok, collections}`: When the query was successful. The list may be empty, if there are no collections.
+  - `{:error, error_value}`: When there was an error querying the database.
+  """
+  @doc since: "1.0.0"
+  @spec all() :: {:ok, [t()]} | {:error, any()}
+  def all() do
+    Memento.transaction(fn ->
+      Memento.Query.all(__MODULE__)
+    end)
+  end
+
+  @doc """
   Writes a collection to the memorable database.
 
   If a collection already exists with the same ID in the database, the collection is updated. Otherwise, a new
