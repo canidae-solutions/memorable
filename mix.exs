@@ -9,7 +9,7 @@ defmodule Memorable.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       name: "memorable",
-      source_url: "https://github.com/delan/memorable",
+      source_url: "https://github.com/canidae-solutions/memorable",
       docs: &docs/0
     ]
   end
