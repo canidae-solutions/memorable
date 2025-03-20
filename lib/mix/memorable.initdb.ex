@@ -2,7 +2,10 @@ defmodule Mix.Tasks.Memorable.InitDb do
   @shortdoc "Initializes the Memorable database"
 
   @tables [
-    Memorable.Collection
+    Memorable.Data.Collection,
+    Memorable.Data.Image,
+    Memorable.Data.Tag,
+    Memorable.Data.ImageTag
   ]
 
   use Mix.Task

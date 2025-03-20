@@ -1,7 +1,3 @@
-defmodule Memorable.Collection do
-  use Memento.Table, attributes: [:id, :name]
-end
-
 defmodule Memorable.Router do
   use Plug.Router
 
@@ -23,6 +19,7 @@ defmodule Memorable do
   """
   use Application
   require Logger
+  alias Memorable.Data
 
   def start(_type, _args) do
     Supervisor.start_link(
@@ -38,10 +35,10 @@ defmodule Memorable do
   def memento_test() do
     Memento.transaction!(fn ->
       _c20250201 =
-        %Memorable.Collection{id: 1, name: "Methven Park + Merri Creek Walk"}
+        %Data.Collection{id: 1, name: "Methven Park + Merri Creek Walk"}
         |> Memento.Query.write()
 
-      IO.inspect(Memento.Query.all(Memorable.Collection))
+      IO.inspect(Memento.Query.all(Data.Collection))
     end)
   end
 end
