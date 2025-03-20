@@ -44,7 +44,14 @@ defmodule Mix.Tasks.Memorable.InitDb do
   defp create_tables([]), do: :ok
 
   defp create_tables([table | rest]) do
-    case Memento.Table.create(table, disc_copies: [node()]) do
+    # No disc-backed storage in test
+    table_options =
+      case Mix.env() do
+        :test -> []
+        _ -> [disc_copies: [node()]]
+      end
+
+    case Memento.Table.create(table, table_options) do
       :ok ->
         Logger.info("Created table #{inspect(table)}")
         create_tables(rest)
