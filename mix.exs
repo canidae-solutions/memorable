@@ -7,7 +7,10 @@ defmodule Memorable.MixProject do
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      name: "memorable",
+      source_url: "https://github.com/delan/memorable",
+      docs: &docs/0
     ]
   end
 
@@ -19,9 +22,17 @@ defmodule Memorable.MixProject do
     ]
   end
 
+  defp docs do
+    [
+      main: "Memorable",
+      extras: ["README.md"]
+    ]
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
       {:memento, "~> 0.5.0"},
       {:plug, "~> 1.17.0"},
       {:plug_cowboy, "~> 2.0"},
