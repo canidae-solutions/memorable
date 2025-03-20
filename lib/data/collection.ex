@@ -29,7 +29,7 @@ defmodule Memorable.Data.Collection do
     %__MODULE__{
       id: Memorable.Util.generate_id(),
       name: name,
-      creation_date: DateTime.now!("Etc/UTC")
+      creation_date: DateTime.utc_now()
     }
   end
 
