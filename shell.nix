@@ -1,6 +1,10 @@
+let
+  inputs = import ./nix/inputs.nix;
+in
+
 {
-  pkgs ? import <nixpkgs> { },
-  preCommitHook ? "",
+  pkgs ? inputs.nixpkgs.legacyPackages,
+  commitHooks ? import ./nix/commit-hooks.nix { },
 }:
 
 pkgs.mkShell {
@@ -14,7 +18,5 @@ pkgs.mkShell {
     nil
   ];
 
-  shellHook = ''
-    ${preCommitHook}
-  '';
+  inherit (commitHooks) shellHook;
 }

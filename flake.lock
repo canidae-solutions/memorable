@@ -2,17 +2,17 @@
   "nodes": {
     "flake-compat": {
       "locked": {
-        "lastModified": 1733328505,
-        "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "ff81ac966bb2cae68946d5ed5fc4994f96d0ffec",
-        "type": "github"
+        "lastModified": 1742412704,
+        "narHash": "sha256-mhazLo8DuZ3c6r5I7hDxxag8ftAM4W0aUjFjQuw8q5c=",
+        "ref": "refs/heads/main",
+        "rev": "f7a7752f237bbc59b868058f70cffd3e436b49b7",
+        "revCount": 69,
+        "type": "git",
+        "url": "https://git.lix.systems/lix-project/flake-compat"
       },
       "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.lix.systems/lix-project/flake-compat"
       }
     },
     "flake-compat_2": {

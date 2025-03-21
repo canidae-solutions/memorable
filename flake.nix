@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.url = "git+https://git.lix.systems/lix-project/flake-compat";
 
     git-hooks.url = "github:cachix/git-hooks.nix";
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
@@ -24,17 +24,11 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        checks.pre-commit-check = git-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            mix-format.enable = true;
-            nixfmt-rfc-style.enable = true;
-          };
-        };
+        checks.pre-commit = import ./nix/commit-hooks.nix { git-hooks = git-hooks.lib.${system}; };
 
         devShell = import ./shell.nix {
           inherit pkgs;
-          preCommitHook = self.checks.${system}.pre-commit-check.shellHook;
+          commitHooks = self.checks.${system}.pre-commit;
         };
       }
     );
