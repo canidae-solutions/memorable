@@ -8,20 +8,24 @@ defmodule Memorable.Data.Collection do
   Collections are comprised of the following fields:
   - `id`: An [ID](`t:Memorable.Util.id/0`) representing the collection
   - `name`: The human-readable name of the collection
-  - `creation_date`: A `DateTime` representing the time at which the collection was created.
+  - `created_datetime`: A `DateTime` representing the time at which the collection was created.
   """
   @moduledoc since: "1.0.0"
 
-  @derive {Inspect, only: [:id, :name, :creation_date]}
-  use Memento.Table, attributes: [:id, :name, :creation_date]
+  @derive {Inspect, only: [:id, :name, :created_datetime]}
+  use Memento.Table, attributes: [:id, :name, :created_datetime]
 
-  @type t :: %__MODULE__{id: Memorable.Util.id(), name: String.t(), creation_date: DateTime.t()}
+  @type t :: %__MODULE__{
+          id: Memorable.Util.id(),
+          name: String.t(),
+          created_datetime: DateTime.t()
+        }
 
   @doc """
   Creates a new collection.
 
   Accepts the name to give the collection, and creates a new collection with a randomly-generated ID, and the current
-  time as the `creation_date`.
+  time as the `created_datetime`.
   """
   @doc since: "1.0.0"
   @spec new(String.t()) :: t()
@@ -29,7 +33,7 @@ defmodule Memorable.Data.Collection do
     %__MODULE__{
       id: Memorable.Util.generate_id(),
       name: name,
-      creation_date: DateTime.utc_now()
+      created_datetime: DateTime.utc_now()
     }
   end
 

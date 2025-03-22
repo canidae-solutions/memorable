@@ -15,7 +15,7 @@ defmodule Memorable.Data.CollectionTest do
     test "creates a collection with the given name", %{collection: collection} do
       assert String.length(collection.id) == 26
       assert collection.name == "Diffies"
-      assert %DateTime{} = collection.creation_date
+      assert %DateTime{} = collection.created_datetime
     end
   end
 
