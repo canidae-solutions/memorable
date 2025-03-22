@@ -37,5 +37,27 @@ defmodule Memorable do
     |> Data.Collection.rename("Renamed Collection")
     |> Data.Collection.write()
     |> IO.inspect()
+
+    # `Command` in rust needs to call waitpid(2), which fails with ECHILD when the signal handler
+    # for SIGCHLD is set to SIG_IGN, as is done in the erlang vm.
+    # <https://github.com/rusterlium/rustler/issues/446>
+    # <http://erlang.org/pipermail/erlang-questions/2020-November/100109.html>
+    :os.set_signal(:sigchld, :default)
   end
+end
+
+# runs processes using rust ffi.
+#
+# erlang’s port api is busted for any program that needs eof on stdin before writing its output,
+# because closing a port closes both stdin and stdout [1]. libraries like porcelain [2] get around
+# this by running programs with a wrapper that can close stdin on our behalf, but sadly porcelain
+# has a serious flaw that is unlikely to be fixed for the foreseeable future [3].
+# 1. <http://erlang.org/pipermail/erlang-questions/2013-July/074905.html>
+# 2. <https://hex.pm/packages/porcelain>
+# 3. <https://github.com/alco/porcelain/issues/50#issuecomment-401462266>
+defmodule Subprocess do
+  use Rustler, otp_app: :memorable, crate: "subprocess"
+
+  # When your NIF is loaded, it will override this function.
+  def exiftool_json(_image_data), do: :erlang.nif_error(:nif_not_loaded)
 end

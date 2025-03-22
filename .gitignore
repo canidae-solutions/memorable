@@ -30,3 +30,6 @@ memorable-*.tar
 
 # git-hooks.nix generated configuration
 /.pre-commit-config.yaml
+
+# Rust binary artifacts
+/target/
