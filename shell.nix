@@ -16,6 +16,8 @@ pkgs.mkShell {
 
     nixfmt-rfc-style
     nil
+
+    cargo
   ];
 
   inherit (commitHooks) shellHook;
