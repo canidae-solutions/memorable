@@ -15,8 +15,9 @@ defmodule Memorable.Data.Collection do
   @derive {Inspect, only: [:id, :name, :created_datetime]}
   use Memento.Table, attributes: [:id, :name, :created_datetime]
 
+  @type id :: Memorable.Util.id()
   @type t :: %__MODULE__{
-          id: Memorable.Util.id(),
+          id: __MODULE__.id(),
           name: String.t(),
           created_datetime: DateTime.t()
         }

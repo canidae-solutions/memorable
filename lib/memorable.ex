@@ -25,24 +25,36 @@ defmodule Memorable do
     Supervisor.start_link(
       [
         {Plug.Cowboy, plug: Memorable.Router, scheme: :http, options: [port: 4000]},
-        {Task, &memento_test/0}
+        {Task, &test/0}
       ],
       strategy: :one_for_one
     )
     |> tap(fn _ -> Logger.info("memorable listening on port 4000") end)
   end
 
-  def memento_test() do
+  def test() do
+    alias Data.Image
+
     Data.Collection.new("Test Collection")
     |> Data.Collection.rename("Renamed Collection")
     |> Data.Collection.write()
     |> IO.inspect()
+
+    image = %Image{
+      id: 1,
+      collection_id: nil,
+      path: "test/data/20250317_0_0028_01.jpg",
+      imported_datetime: DateTime.utc_now()
+    }
 
     # `Command` in rust needs to call waitpid(2), which fails with ECHILD when the signal handler
     # for SIGCHLD is set to SIG_IGN, as is done in the erlang vm.
     # <https://github.com/rusterlium/rustler/issues/446>
     # <http://erlang.org/pipermail/erlang-questions/2020-November/100109.html>
     :os.set_signal(:sigchld, :default)
+
+    Image.read_metadata(image) |> IO.inspect()
+    Data.Image.DerivedMetadata.from_image(image) |> IO.inspect()
   end
 end
 
