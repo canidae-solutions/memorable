@@ -59,17 +59,18 @@ defmodule Memorable.Data.Image.DerivedMetadata do
     with {:read_file, {:ok, data}} <- {:read_file, File.read(path)},
          {:read_metadata, {:ok, metadata}} <-
            {:read_metadata, Image.read_metadata(image)} do
-      %__MODULE__{
-        image_id: image_id,
-        file_hash: :crypto.hash(:sha256, data),
-        original_datetime: original_datetime(metadata),
-        lens_model: Map.get(metadata, "LensID"),
-        body_model: Map.get(metadata, "Model"),
-        focal_length: focal_length(metadata),
-        aperture: Map.get(metadata, "Aperture"),
-        exposure_time: Map.get(metadata, "ExposureTime"),
-        iso: Map.get(metadata, "ISO")
-      }
+      {:ok,
+       %__MODULE__{
+         image_id: image_id,
+         file_hash: :crypto.hash(:sha256, data),
+         original_datetime: original_datetime(metadata),
+         lens_model: Map.get(metadata, "LensID"),
+         body_model: Map.get(metadata, "Model"),
+         focal_length: focal_length(metadata),
+         aperture: Map.get(metadata, "Aperture"),
+         exposure_time: Map.get(metadata, "ExposureTime"),
+         iso: Map.get(metadata, "ISO")
+       }}
     else
       {:read_file, error} -> {:error, {:read_file, error}}
       {:read_metadata, error} -> {:error, {:read_metadata, error}}
