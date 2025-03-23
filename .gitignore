@@ -34,3 +34,6 @@ memorable-*.tar
 # Rust binary artifacts
 /target/
 /priv/
+
+# dev.exs `images_path`
+/images/

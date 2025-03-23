@@ -12,6 +12,8 @@ defmodule Memorable.Data.Collection do
   """
   @moduledoc since: "1.0.0"
 
+  alias Memorable.Data.Image
+
   @derive {Inspect, only: [:id, :name, :created_datetime]}
   use Memento.Table, attributes: [:id, :name, :created_datetime]
 
@@ -92,5 +94,35 @@ defmodule Memorable.Data.Collection do
     Memento.transaction(fn ->
       Memento.Query.write(collection)
     end)
+  end
+
+  @doc """
+  Does not write the image to the database.
+  """
+  @spec import(t(), Path.t()) :: {:ok, t()} | {:error, any()}
+  def import(%__MODULE__{id: collection_id} = collection, original_path) do
+    %Image{path: filename} = image = Image.new(collection, original_path, DateTime.utc_now())
+
+    with {:image_path, {:ok, image_path}} <-
+           {:image_path, Image.path(image, collection)},
+         {:collection_path, {:ok, collection_path}} <-
+           {:collection_path, path(collection)},
+         {:mkdir, :ok} <- {:mkdir, File.mkdir_p(collection_path)} do
+      with {:error, error} <- File.ln(original_path, image_path),
+           {:error, error} <- File.cp(original_path, image_path) do
+        {:error, {:link_or_copy, error}}
+      else
+        :ok -> {:ok, image}
+      end
+    else
+      {:image_path, :error} -> {:error, :image_path}
+      {:collection_path, :error} -> {:error, :collection_path}
+      {:mkdir, {:error, error}} -> {:error, {:mkdir, error}}
+    end
+  end
+
+  @spec path(t()) :: {:ok, Path.t()} | :error
+  def path(%__MODULE__{id: id}) do
+    Memorable.Util.images_path(id)
   end
 end

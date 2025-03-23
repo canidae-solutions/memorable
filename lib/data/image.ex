@@ -13,7 +13,7 @@ defmodule Memorable.Data.Image do
   ## Fields
   - `id`: An [ID](`t:Memorable.Util.id/0`) representing the image.
   - `collection_id`: The [ID](`t:Memorable.Util.id/0`) of the `Memorable.Data.Collection` the image is a part of.
-  - `path`: The path to the image file on disk, relative to the folder memorable stores all images in.
+  - `path`: The path to the image file on disk, relative to the associated collection's folder.
   - `imported_datetime`: A `DateTime` representing the time at which the image was imported into the memorable database.
   """
   @moduledoc since: "1.0.0"
@@ -23,6 +23,7 @@ defmodule Memorable.Data.Image do
   @type t :: %__MODULE__{
           id: Memorable.Util.id(),
           collection_id: Memorable.Data.Collection.id(),
+          # TODO: rename this field to `filename`
           path: Path.t(),
           imported_datetime: DateTime.t()
         }
@@ -50,6 +51,25 @@ defmodule Memorable.Data.Image do
       {:json_decode, {:error, reason}} -> {:error, {:json_decode, reason}}
     end
   end
+
+  @spec new(Collection.t(), Path.t(), DateTime.t()) :: t()
+  def new(%Collection{id: collection_id}, original_path, imported_datetime) do
+    id = Memorable.Util.generate_id()
+    extension = Path.extname(original_path)
+    filename = "#{id}#{extension}"
+
+    %__MODULE__{
+      id: id,
+      collection_id: collection_id,
+      path: filename,
+      imported_datetime: imported_datetime
+    }
+  end
+
+  @spec path(t(), Collection.t()) :: {:ok, Path.t()} | :error
+  def path(%__MODULE__{path: filename}, %Collection{id: collection_id}) do
+    Memorable.Util.images_path(Path.join(collection_id, filename))
+  end
 end
 
 defmodule Memorable.Data.Image.DerivedMetadata do
@@ -63,8 +83,8 @@ defmodule Memorable.Data.Image.DerivedMetadata do
 
   ## Fields
   - `image_id`: The [ID](`t:Memorable.Util.id/0`) of the `Memorable.Data.Image` this metadata is associated with.
-  - `file_hash`: A SHA256 hash of the image file this metadata was derived from. This is used to ensure that the
-    metadata stored in the table is up to date, and matches the image on disk.
+  - `file_hash`: A tuple containing the hash type, and the hash of the image file this metadata was derived from. This
+    is used to ensure that the metadata stored in the table is up to date, and matches the image on disk.
 
   The following fields are retrieved from EXIF metadata stored in the image, and may be `nil` if the associated tags are
   not present on the image:
@@ -139,8 +159,8 @@ defmodule Memorable.Data.Image.DerivedMetadata do
          iso: Map.get(metadata, "ISO")
        }}
     else
-      {:read_file, error} -> {:error, {:read_file, error}}
-      {:read_metadata, error} -> {:error, {:read_metadata, error}}
+      {:read_file, {:error, error}} -> {:error, {:read_file, error}}
+      {:read_metadata, {:error, error}} -> {:error, {:read_metadata, error}}
     end
   end
 
