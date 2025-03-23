@@ -14,15 +14,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Setup Elixir
-      uses: erlef/setup-beam@v1
-      with:
-        version-file: .tool-versions
-        version-type: strict
+    - name: Install Lix
+      uses: samueldr/lix-gha-installer-action@v1
     - name: Fetch Elixir dependencies
-      run: mix deps.get
+      run: nix develop -c mix deps.get
     - name: Generate docs
-      run: mix docs
+      run: nix develop -c mix docs
     - name: Upload docs artifact
       uses: actions/upload-pages-artifact@v3
       with:
