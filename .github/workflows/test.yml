@@ -1,0 +1,19 @@
+name: "Run tests"
+
+on:
+  push:
+  pull_request:
+    types: ["synchronize"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v4
+    - name: Install Lix
+      uses: samueldr/lix-gha-installer-action@v1
+    - name: Run `mix deps.get` in a Nix shell
+      run: nix develop -c mix deps.get
+    - name: Run `mix test` in a Nix shell
+      run: nix develop -c mix test

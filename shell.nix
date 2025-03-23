@@ -17,7 +17,7 @@ pkgs.mkShell {
     nixfmt-rfc-style
     nil
 
-    cargo
+    rustup
     exiftool
   ];
 
