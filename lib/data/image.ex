@@ -35,16 +35,24 @@ defmodule Memorable.Data.Image do
   To get metadata from the image, memorable calls out to `exiftool` installed on the system to obtain all EXIF tags
   stored on the image. See `Subprocess`, or the code in `native/subprocess` for details on how this is done.
 
-  Returns a map from EXIF tags to their values, for all tags in the image.
+  Returns:
+  - `{:ok, metadata}`: A map from EXIF tags to their values, for all tags in the image, when the read was successful.
+  - `{:error, :image_path}`: When the path to the associate image could not be calculated.
+  - `{:error, {:read_file, error}}`: When an error occured reading the image file from disk.
+  - `{:error, :exiftool_exit_signal}`: When `exiftool` exits due to receiving a signal.
+  - `{:error, {:exiftool_exit_status, status_code}}`: When `exiftool` exits with a non-zero status code.
+  - `{:error, {:json_decode, error}}`: When parsing the `exiftool` JSON response fails.
   """
   @doc since: "1.0.0"
-  @spec read_metadata(t()) :: {:ok, metadata()} | {:error, any()}
-  def read_metadata(%__MODULE__{path: path}) do
-    with {:file_read, {:ok, data}} <- {:file_read, File.read(path)},
+  @spec read_metadata(t(), Collection.t()) :: {:ok, metadata()} | {:error, any()}
+  def read_metadata(image, collection) do
+    with {:image_path, {:ok, path}} <- {:image_path, path(image, collection)},
+         {:file_read, {:ok, data}} <- {:file_read, File.read(path)},
          %{status: 0, stdout: stdout} <- Subprocess.exiftool_json(data),
          {:json_decode, {:ok, result}} <- {:json_decode, JSON.decode(to_string(stdout))} do
       {:ok, List.first(result)}
     else
+      {:image_path, :error} -> {:error, :image_path}
       {:file_read, {:error, reason}} -> {:error, {:file_read, reason}}
       %{status: nil} -> {:error, :exiftool_exit_signal}
       %{status: other} -> {:error, {:exiftool_exit_status, other}}
@@ -139,9 +147,10 @@ defmodule Memorable.Data.Image.DerivedMetadata do
   - `{:error, {:read_metadata, error}}`: When an error occurred while extracting EXIF tags from the image file.
   """
   @doc since: "1.0.0"
-  @spec from_image(Image.t()) :: {:ok, t()} | {:error, any()}
-  def from_image(%Image{id: image_id, path: path} = image) do
-    with {:read_file, {:ok, data}} <- {:read_file, File.read(path)},
+  @spec from_image(Image.t(), Collection.t()) :: {:ok, t()} | {:error, any()}
+  def from_image(%Image{id: image_id} = image, collection) do
+    with {:image_path, {:ok, path}} <- Image.path(image, collection),
+         {:read_file, {:ok, data}} <- {:read_file, File.read(path)},
          {:read_metadata, {:ok, metadata}} <-
            {:read_metadata, Image.read_metadata(image)} do
       sha256 = Base.encode16(:crypto.hash(:sha256, data), case: :lower)

@@ -50,8 +50,8 @@ defmodule Memorable do
     # <http://erlang.org/pipermail/erlang-questions/2020-November/100109.html>
     :os.set_signal(:sigchld, :default)
 
-    Image.read_metadata(image) |> IO.inspect()
-    Data.Image.DerivedMetadata.from_image(image) |> IO.inspect()
+    Image.read_metadata(image, collection) |> IO.inspect()
+    Data.Image.DerivedMetadata.from_image(image, collection) |> IO.inspect()
   end
 end
 
