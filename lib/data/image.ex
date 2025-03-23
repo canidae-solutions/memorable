@@ -59,10 +59,12 @@ defmodule Memorable.Data.Image.DerivedMetadata do
     with {:read_file, {:ok, data}} <- {:read_file, File.read(path)},
          {:read_metadata, {:ok, metadata}} <-
            {:read_metadata, Image.read_metadata(image)} do
+      sha256 = Base.encode16(:crypto.hash(:sha256, data), case: :lower)
+
       {:ok,
        %__MODULE__{
          image_id: image_id,
-         file_hash: :crypto.hash(:sha256, data),
+         file_hash: {:sha256, sha256},
          original_datetime: original_datetime(metadata),
          lens_model: Map.get(metadata, "LensID"),
          body_model: Map.get(metadata, "Model"),

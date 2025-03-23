@@ -41,6 +41,11 @@ defmodule Memorable.Data.ImageTest do
   describe "DerivedMetadata.from_image/1" do
     test "parses exif data for the given image", %{image: image} do
       {:ok, metadata} = DerivedMetadata.from_image(image) |> IO.inspect()
+      assert Map.get(metadata, :image_id) == Map.get(image, :id)
+
+      assert Map.get(metadata, :file_hash) ==
+               {:sha256, "3932e8b3f41678e215981303d8320ab70c00fd35b0e8f063eec3087c7de801df"}
+
       assert Map.get(metadata, :original_datetime) == ~N[2025-03-17 18:38:23]
       assert Map.get(metadata, :body_model) == "Canon EOS 1000D"
       assert Map.get(metadata, :lens_model) == "Canon EF-S 55-250mm f/4-5.6 IS STM"
