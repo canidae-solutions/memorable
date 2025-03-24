@@ -37,3 +37,4 @@ memorable-*.tar
 
 # Nix build outputs
 /result
+/result-lib
