@@ -2,7 +2,7 @@ let
   pins = import ./nix/npins;
 
   nixpkgs = import pins.nixpkgs { };
-  rust-toolchain = import ./nix/rust-toolchain.nix nixpkgs;
+  rust-toolchain = nixpkgs.callPackage ./nix/rust-toolchain.nix { };
 
   buildRustCrateForPkgs =
     pkgs:
