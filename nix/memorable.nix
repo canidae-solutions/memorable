@@ -5,8 +5,6 @@
 }:
 
 let
-  inherit (beamPackages) mixRelease fetchMixDeps;
-
   fs = lib.fileset;
   fileset = fs.intersection (fs.gitTracked ../.) (
     fs.unions [
@@ -24,7 +22,7 @@ let
   };
 in
 
-mixRelease rec {
+beamPackages.mixRelease {
   pname = "memorable";
   version = "0.1.0";
 
@@ -34,11 +32,8 @@ mixRelease rec {
 
   IS_NIX_BUILD = 1;
   removeCookie = false;
-  mixFodDeps = fetchMixDeps {
-    pname = "mix-deps-${pname}";
-    inherit version src;
-    hash = "sha256-r7SrGgy4py1pFvVBOM5J0IH7MVxpk5K8wi06CtE/WTU=";
-    IS_NIX_BUILD = 1;
+  mixNixDeps = import ./mix-deps.nix {
+    inherit beamPackages lib;
   };
 
   postBuild = ''
