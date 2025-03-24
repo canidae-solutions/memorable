@@ -12,7 +12,15 @@ git-hooks.run {
   src = ./..;
   hooks = {
     mix-format.enable = true;
-    nixfmt-rfc-style.enable = true;
+
+    nixfmt-rfc-style = {
+      enable = true;
+      excludes = [
+        "mix-deps\\.nix$"
+        "npins/default\\.nix$"
+        "rust-lib\\.nix$"
+      ];
+    };
   };
 
   tools = {
