@@ -3,6 +3,7 @@ let
 in
 
 {
+  pkgs,
   git-hooks ? import pins.git-hooks,
 }:
 
@@ -11,5 +12,9 @@ git-hooks.run {
   hooks = {
     mix-format.enable = true;
     nixfmt-rfc-style.enable = true;
+  };
+
+  tools = {
+    inherit (pkgs) elixir nixfmt-rfc-style;
   };
 }

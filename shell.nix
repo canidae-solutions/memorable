@@ -6,7 +6,7 @@ in
 
 {
   pkgs ? nixpkgs,
-  commitHooks ? import ./nix/commit-hooks.nix { },
+  commitHooks ? import ./nix/commit-hooks.nix { inherit pkgs; },
 }:
 
 pkgs.mkShell {
