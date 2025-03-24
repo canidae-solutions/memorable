@@ -3,7 +3,9 @@ let
 in
 
 {
+  lib,
   elixir,
+  mix2nix,
   nixfmt-rfc-style,
   git-hooks ? import pins.git-hooks,
 }:
@@ -20,6 +22,14 @@ git-hooks.run {
         "npins/default\\.nix$"
         "rust-lib\\.nix$"
       ];
+    };
+
+    regen-mix-deps = {
+      enable = true;
+      name = "Regen mix-deps.nix";
+      entry = "bash -c '${lib.getExe mix2nix} mix.lock > nix/mix-deps.nix'";
+      files = "mix\\.lock$";
+      pass_filenames = false;
     };
   };
 
