@@ -18,6 +18,7 @@ pkgs.mkShell {
     elixir-ls
 
     crate2nix
+    mix2nix
     nixfmt-rfc-style
     nil
     npins
