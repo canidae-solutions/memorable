@@ -8,12 +8,17 @@ in
   elixir,
   mix2nix,
   nixfmt-rfc-style,
+
   git-hooks ? import pins.git-hooks,
+  rust-toolchain,
 }:
 
 git-hooks.run {
   src = ./..;
   hooks = {
+    clippy.enable = true;
+    rustfmt.enable = true;
+
     mix-format.enable = true;
 
     nixfmt-rfc-style = {
@@ -44,5 +49,6 @@ git-hooks.run {
 
   tools = {
     inherit elixir nixfmt-rfc-style;
+    inherit (rust-toolchain) cargo clippy rustfmt;
   };
 }
