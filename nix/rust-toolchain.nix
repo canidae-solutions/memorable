@@ -1,10 +1,10 @@
-pkgs:
+{ pkgs, lib }:
 
 let
   pins = import ./npins;
-  fenix = import pins.fenix { inherit pkgs; };
+  fenix = pkgs.callPackage pins.fenix { };
 
-  toolchainChannel = (pkgs.lib.importTOML ../rust-toolchain.toml).toolchain.channel;
+  toolchainChannel = (lib.importTOML ../rust-toolchain.toml).toolchain.channel;
 in
 fenix.fromToolchainName {
   name = toolchainChannel;
