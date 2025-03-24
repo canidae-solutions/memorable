@@ -33,3 +33,4 @@ memorable-*.tar
 
 # Rust binary artifacts
 /target/
+/priv/
