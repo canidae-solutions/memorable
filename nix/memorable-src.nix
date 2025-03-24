@@ -8,6 +8,7 @@ let
       ../lib
       ../mix.exs
       ../mix.lock
+      ../README.md
       ../test
     ]
   );
