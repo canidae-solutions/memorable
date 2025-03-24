@@ -18,8 +18,19 @@ beamPackages.mixRelease {
     inherit beamPackages lib;
   };
 
+  outputs = [
+    "out"
+    "doc"
+  ];
+
   postBuild = ''
     mkdir -p priv/native
     ln -s ${rust-lib.lib}/lib/libsubprocess.so priv/native/libsubprocess.so
+
+    mix do deps.loadpaths --no-deps-check, docs
+  '';
+
+  postInstall = ''
+    mv doc $doc
   '';
 }
