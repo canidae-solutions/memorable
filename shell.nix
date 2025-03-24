@@ -20,12 +20,13 @@ pkgs.mkShell {
 
     crate2nix
     mix2nix
+    nixd
     nixfmt-rfc-style
-    nil
     npins
 
     rust-toolchain.defaultToolchain
     rust-toolchain.rust-analyzer
+
     exiftool
   ];
 
