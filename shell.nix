@@ -2,11 +2,11 @@ let
   pins = import ./nix/npins;
 
   nixpkgs = import pins.nixpkgs { };
+  commitHooks = import ./nix/commit-hooks.nix { pkgs = nixpkgs; };
 in
 
 {
   pkgs ? nixpkgs,
-  commitHooks ? import ./nix/commit-hooks.nix { inherit pkgs; },
 }:
 
 pkgs.mkShell {
