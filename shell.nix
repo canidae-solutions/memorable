@@ -4,6 +4,7 @@ let
   nixpkgs = import pins.nixpkgs { };
   commitHooks = nixpkgs.callPackage ./nix/commit-hooks.nix { };
   crate2nix = nixpkgs.callPackage pins.crate2nix { };
+  rust-toolchain = import ./nix/rust-toolchain.nix nixpkgs;
 in
 
 {
@@ -23,7 +24,8 @@ pkgs.mkShell {
     nil
     npins
 
-    rustup
+    rust-toolchain.cargo
+    rust-toolchain.rustc
     exiftool
   ];
 
