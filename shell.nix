@@ -16,6 +16,7 @@ pkgs.mkShell {
 
     nixfmt-rfc-style
     nil
+    npins
 
     rustup
     exiftool
