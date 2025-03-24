@@ -1,10 +1,12 @@
 let
-  inputs = import ./nix/inputs.nix;
+  pins = import ./nix/npins;
+
+  nixpkgs = import pins.nixpkgs { };
+  commitHooks = nixpkgs.callPackage ./nix/commit-hooks.nix { };
 in
 
 {
-  pkgs ? inputs.nixpkgs.legacyPackages,
-  commitHooks ? import ./nix/commit-hooks.nix { },
+  pkgs ? nixpkgs,
 }:
 
 pkgs.mkShell {
@@ -16,6 +18,7 @@ pkgs.mkShell {
 
     nixfmt-rfc-style
     nil
+    npins
 
     rustup
     exiftool

@@ -1,9 +1,11 @@
 let
-  inputs = import ./inputs.nix;
+  pins = import ./npins;
 in
 
 {
-  git-hooks ? inputs.git-hooks.lib,
+  elixir,
+  nixfmt-rfc-style,
+  git-hooks ? import pins.git-hooks,
 }:
 
 git-hooks.run {
@@ -11,5 +13,9 @@ git-hooks.run {
   hooks = {
     mix-format.enable = true;
     nixfmt-rfc-style.enable = true;
+  };
+
+  tools = {
+    inherit elixir nixfmt-rfc-style;
   };
 }
