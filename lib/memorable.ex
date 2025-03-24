@@ -33,19 +33,16 @@ defmodule Memorable do
   end
 
   def test() do
+    alias Data.Collection
     alias Data.Image
 
-    Data.Collection.new("Test Collection")
-    |> Data.Collection.rename("Renamed Collection")
-    |> Data.Collection.write()
-    |> IO.inspect()
+    {:ok, collection} =
+      Collection.new("Test Collection")
+      |> Collection.write()
+      |> IO.inspect()
 
-    image = %Image{
-      id: 1,
-      collection_id: nil,
-      path: "test/data/20250317_0_0028_01.jpg",
-      imported_datetime: DateTime.utc_now()
-    }
+    {:ok, image} =
+      Collection.import(collection, "test/data/20250317_0_0028_01.jpg") |> IO.inspect()
 
     # `Command` in rust needs to call waitpid(2), which fails with ECHILD when the signal handler
     # for SIGCHLD is set to SIG_IGN, as is done in the erlang vm.
@@ -53,8 +50,8 @@ defmodule Memorable do
     # <http://erlang.org/pipermail/erlang-questions/2020-November/100109.html>
     :os.set_signal(:sigchld, :default)
 
-    Image.read_metadata(image) |> IO.inspect()
-    Data.Image.DerivedMetadata.from_image(image) |> IO.inspect()
+    Image.read_metadata(image, collection) |> IO.inspect()
+    Data.Image.DerivedMetadata.from_image(image, collection) |> IO.inspect()
   end
 end
 
