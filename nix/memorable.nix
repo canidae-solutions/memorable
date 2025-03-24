@@ -4,11 +4,27 @@
   rust-lib,
 }:
 
+let
+  fs = lib.fileset;
+  fileset = fs.intersection (fs.gitTracked ../.) (
+    fs.unions [
+      ../config
+      ../lib
+      ../mix.exs
+      ../mix.lock
+      ../README.md
+      ../test
+    ]
+  );
+in
 beamPackages.mixRelease {
   pname = "memorable";
   version = "0.1.0";
 
-  src = import ./memorable-src.nix lib;
+  src = fs.toSource {
+    root = ../.;
+    inherit fileset;
+  };
 
   buildInputs = [ rust-lib ];
 
