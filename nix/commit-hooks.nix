@@ -4,6 +4,7 @@ in
 
 {
   lib,
+  crate2nix,
   elixir,
   mix2nix,
   nixfmt-rfc-style,
@@ -29,6 +30,14 @@ git-hooks.run {
       name = "Regen mix-deps.nix";
       entry = "bash -c '${lib.getExe mix2nix} mix.lock > nix/mix-deps.nix'";
       files = "mix\\.lock$";
+      pass_filenames = false;
+    };
+
+    regen-rust-lib = {
+      enable = true;
+      name = "Regen rust-lib.nix";
+      entry = "${lib.getExe crate2nix} generate -o nix/rust-lib.nix";
+      files = "Cargo\\.lock$";
       pass_filenames = false;
     };
   };
