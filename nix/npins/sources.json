@@ -16,6 +16,19 @@
       "url": "https://api.github.com/repos/nix-community/crate2nix/tarball/0.14.1",
       "hash": "04c4ikk9abc33mgn16chng4zxwd67lf27720mfc1h5kvgd3a3ibs"
     },
+    "fenix": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "fenix"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "7d9ba794daf5e8cc7ee728859bc688d8e26d5f06",
+      "url": "https://github.com/nix-community/fenix/archive/7d9ba794daf5e8cc7ee728859bc688d8e26d5f06.tar.gz",
+      "hash": "18fzdlxk7ixm5cy7v3aq9rgkcwxdv4xbgp0na3bnf8cl1l6qnnxi"
+    },
     "git-hooks": {
       "type": "Git",
       "repository": {
