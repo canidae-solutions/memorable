@@ -1,6 +1,7 @@
 {
   lib,
   beamPackages,
+  exiftool,
   rust-lib,
 }:
 
@@ -26,7 +27,10 @@ beamPackages.mixRelease {
     inherit fileset;
   };
 
-  buildInputs = [ rust-lib ];
+  buildInputs = [
+    exiftool
+    rust-lib
+  ];
 
   IS_NIX_BUILD = 1;
   removeCookie = false;
@@ -44,6 +48,11 @@ beamPackages.mixRelease {
     ln -s ${rust-lib.lib}/lib/libsubprocess.so priv/native/libsubprocess.so
 
     mix do deps.loadpaths --no-deps-check, docs
+  '';
+
+  doCheck = true;
+  checkPhase = ''
+    mix test --no-deps-check
   '';
 
   postInstall = ''
