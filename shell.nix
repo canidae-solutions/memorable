@@ -24,10 +24,12 @@ pkgs.mkShell {
     nil
     npins
 
-    rust-toolchain.cargo
-    rust-toolchain.rustc
+    rust-toolchain.defaultToolchain
+    rust-toolchain.rust-analyzer
     exiftool
   ];
+
+  RUST_SRC_PATH = "${rust-toolchain.rust-src}/lib/rustlib/src/rust/library/";
 
   inherit (commitHooks) shellHook;
 }
