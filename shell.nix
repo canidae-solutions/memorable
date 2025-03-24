@@ -3,6 +3,7 @@ let
 
   nixpkgs = import pins.nixpkgs { };
   commitHooks = nixpkgs.callPackage ./nix/commit-hooks.nix { };
+  crate2nix = nixpkgs.callPackage pins.crate2nix { };
 in
 
 {
@@ -16,6 +17,7 @@ pkgs.mkShell {
     elixir
     elixir-ls
 
+    crate2nix
     nixfmt-rfc-style
     nil
     npins

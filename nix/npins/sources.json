@@ -1,5 +1,21 @@
 {
   "pins": {
+    "crate2nix": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "crate2nix"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "0.14.1",
+      "revision": "2d7f17cb5d0f066019e9b6169276951eb9533859",
+      "url": "https://api.github.com/repos/nix-community/crate2nix/tarball/0.14.1",
+      "hash": "04c4ikk9abc33mgn16chng4zxwd67lf27720mfc1h5kvgd3a3ibs"
+    },
     "git-hooks": {
       "type": "Git",
       "repository": {
