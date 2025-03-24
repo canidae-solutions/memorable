@@ -5,7 +5,7 @@ defmodule Memorable.Data.Collection do
   Collections can be thought of as analogous to a photo album, or a gallery. They are the primary mechanism for
   organizing images.
 
-  Collections are comprised of the following fields:
+  ## Fields
   - `id`: An [ID](`t:Memorable.Util.id/0`) representing the collection
   - `name`: The human-readable name of the collection
   - `created_datetime`: A `DateTime` representing the time at which the collection was created.
