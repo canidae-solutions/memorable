@@ -3,7 +3,8 @@ let
 in
 
 {
-  pkgs,
+  elixir,
+  nixfmt-rfc-style,
   git-hooks ? import pins.git-hooks,
 }:
 
@@ -15,6 +16,6 @@ git-hooks.run {
   };
 
   tools = {
-    inherit (pkgs) elixir nixfmt-rfc-style;
+    inherit elixir nixfmt-rfc-style;
   };
 }

@@ -2,7 +2,7 @@ let
   pins = import ./nix/npins;
 
   nixpkgs = import pins.nixpkgs { };
-  commitHooks = import ./nix/commit-hooks.nix { pkgs = nixpkgs; };
+  commitHooks = nixpkgs.callPackage ./nix/commit-hooks.nix { };
 in
 
 {
