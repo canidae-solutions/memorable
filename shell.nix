@@ -1,9 +1,11 @@
 let
-  inputs = import ./nix/inputs.nix;
+  pins = import ./nix/npins;
+
+  nixpkgs = import pins.nixpkgs { };
 in
 
 {
-  pkgs ? inputs.nixpkgs.legacyPackages,
+  pkgs ? nixpkgs,
   commitHooks ? import ./nix/commit-hooks.nix { },
 }:
 

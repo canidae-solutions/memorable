@@ -1,9 +1,9 @@
 let
-  inputs = import ./inputs.nix;
+  pins = import ./npins;
 in
 
 {
-  git-hooks ? inputs.git-hooks.lib,
+  git-hooks ? import pins.git-hooks,
 }:
 
 git-hooks.run {
