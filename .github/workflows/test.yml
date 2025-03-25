@@ -8,11 +8,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
     - name: Check out repo
       uses: actions/checkout@v4
     - name: Install Lix
       uses: canidae-solutions/lix-quick-install-action@v2
+    - name: Cache nix store
+      uses: nix-community/cache-nix-action@v6
+      with:
+        primary-key: nix-store-${{ runner.os }}-${{ hashFiles('**/*.nix', 'nix/npins/sources.json') }}
+        restore-prefixes-first-match: nix-store-${{ runner.os }}-
+        gc-max-store-size: 1G
+        purge: true
+        purge-primary-key: never
+        purge-prefixes: nix-store-${{ runner.os }}-
     - name: Setup Cachix
       uses: cachix/cachix-action@v14
       with:
