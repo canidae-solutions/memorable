@@ -1,7 +1,10 @@
 let
   pins = import ./nix/npins;
 
-  nixpkgs = import pins.nixpkgs { };
+  nixpkgs = import pins.nixpkgs {
+    config = { };
+    overlays = [ ];
+  };
   crate2nix = nixpkgs.callPackage pins.crate2nix { };
   rust-toolchain = nixpkgs.callPackage ./nix/rust-toolchain.nix { };
   commitHooks = nixpkgs.callPackage ./nix/commit-hooks.nix { inherit crate2nix rust-toolchain; };
