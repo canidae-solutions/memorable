@@ -12,7 +12,7 @@ jobs:
     - name: Check out repo
       uses: actions/checkout@v4
     - name: Install Lix
-      uses: canidae-solutions/lix-quick-install-action@v1
+      uses: canidae-solutions/lix-quick-install-action@v2
     - name: Run `mix deps.get` in a Nix shell
       run: nix-shell --pure --run "mix deps.get"
     - name: Run `mix test` in a Nix shell

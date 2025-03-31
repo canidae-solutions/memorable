@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Install Lix
-      uses: canidae-solutions/lix-quick-install-action@v1
+      uses: canidae-solutions/lix-quick-install-action@v2
     - name: Fetch Elixir dependencies
       run: nix-shell --pure --run "mix deps.get"
     - name: Generate docs
