@@ -23,4 +23,17 @@ defmodule Memorable.Util do
     Uniq.UUID.uuid7(:raw)
     |> Base.encode32(padding: false, case: :lower)
   end
+
+  @doc """
+  Given a path relative to the image store, [...]
+
+  Returns an error if the path tries to break out of the image store.
+  """
+  @spec images_path(Path.t() | nil) :: {:ok, Path.t()} | :error
+  def images_path(path \\ nil) do
+    # TODO: handle nil here, for getting the root with `images_path()`
+    with {:ok, path} <- Path.safe_relative(path) do
+      {:ok, Path.join(Application.fetch_env!(:memorable, :images_path), path)}
+    end
+  end
 end
