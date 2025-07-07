@@ -34,7 +34,7 @@ defmodule Memorable.MixProject do
     [
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
       {:memento, "~> 0.5.0"},
-      {:plug, "~> 1.17.0"},
+      {:plug, "~> 1.18.1"},
       {:plug_cowboy, "~> 2.0"},
       {:rustler, "~> 0.36.1"},
       {:uniq, "~> 0.6.1"}
