@@ -21,7 +21,7 @@ jobs:
     - name: Generate docs
       run: nix-shell --pure --run "mix docs"
     - name: Upload docs artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         path: doc
 
